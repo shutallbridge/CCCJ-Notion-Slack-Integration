@@ -1,0 +1,15 @@
+{
+  "name": "cccj-notion-slack-integration",
+  "version": "1.0.0",
+  "description": "Slackbot for internal use at Co-Creation Community Japan",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shu Takahashi",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/bolt": "^3.11.1",
+    "dotenv": "^16.0.1"
+  }
+}
