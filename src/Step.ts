@@ -1,8 +1,13 @@
-export type NextArg = { [key: string]: any };
+export interface Step<Args, ReturnArgs, NextArgs> {
+  onStart?(next: (returnArgs: ReturnArgs) => void): void;
+  onExecute?(args: Args): ReturnArgs | Promise<ReturnArgs>;
+  filterNextArgs?(returnArgs: ReturnArgs): NextArgs;
+}
 
-export type NextCallback = (nextProps?: NextArg | Promise<NextArg>) => void;
-
-export interface Step {
-  initialRun?(next: NextCallback): void;
-  execute?(arg: any): void | Promise<void> | NextArg | Promise<NextArg>;
+export abstract class Step<Args, ReturnArgs, NextArgs>
+  implements Step<Args, ReturnArgs, NextArgs>
+{
+  constructor(filterNextArgs?: (returnArgs: ReturnArgs) => NextArgs) {
+    this.filterNextArgs = filterNextArgs;
+  }
 }

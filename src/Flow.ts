@@ -1,51 +1,63 @@
-import { Step, NextArg } from './Step';
+import { Step } from './Step';
 
 export class Flow {
-  private steps: Step[] = [];
-  private args: NextArg[] = [];
+  private steps: Step<any, any, any>[] = [];
 
-  constructor() {
-    this.steps = [];
-    this.args = [];
+  private returnArgs: any = null;
+  private nextArgs: any = null;
+  private previousArgs: any = null;
+
+  constructor(steps?: Step<any, any, any>[], initialArgs?: any) {
+    if (!!steps) {
+      this.steps.push(...steps);
+    }
+    if (!!initialArgs) {
+      this.previousArgs = initialArgs;
+    }
   }
 
-  public addStep(step: Step) {
+  public addStep(step: Step<any, any, any>) {
     this.steps.push(step);
   }
 
-  public addSteps(steps: Step[]) {
+  public addSteps(steps: Step<any, any, any>[]) {
     this.steps.push(...steps);
   }
 
-  private async executeFrom(index: number) {
-    let currentIndex = index;
+  public setInitialArgs<Args>(initialArgs: Args) {
+    this.previousArgs = initialArgs;
+  }
+
+  private async executeFromIndex(index: number) {
     for (const step of this.steps.slice(index)) {
-      if (step.execute) {
-        const nextArg = await step.execute(this.args[currentIndex]);
-        if (nextArg) {
-          this.args[index + 1] = nextArg;
-        }
+      if (!!step.onExecute) {
+        this.returnArgs = await step.onExecute(this.previousArgs);
+      } else {
+        break;
       }
-      currentIndex++;
+      if (!!step.filterNextArgs) {
+        this.nextArgs = step.filterNextArgs(this.returnArgs);
+      }
+      this.previousArgs = this.nextArgs;
+      this.returnArgs = null;
+      this.nextArgs = null;
     }
   }
 
   private initialRun() {
     this.steps.forEach((step, index) => {
-      if (step.initialRun) {
-        step.initialRun((nextArg?: NextArg) => {
-          if (nextArg) {
-            this.args[index + 1] = nextArg;
+      if (!!step.onStart) {
+        step.onStart((returnArgs: any) => {
+          if (!!step.filterNextArgs) {
+            this.previousArgs = step.filterNextArgs(returnArgs);
           }
-          this.executeFrom(index + 1);
+          this.executeFromIndex(index + 1);
         });
       }
     });
   }
 
   public start() {
-    this.args = new Array(this.steps.length).fill({});
     this.initialRun();
-    console.log('LOG: Starting Flow');
   }
 }
