@@ -2,11 +2,18 @@ import { Step } from '../Step';
 import { notion, DATABASE_ID } from '../api/notion';
 import { format } from 'date-fns';
 
-interface NewNotionEntryArgs {
+export interface NewNotionEntryArgs {
+  client: any;
+  trigger_id: string;
   username: string;
   name: string;
   aboutYourself: string;
   tags: string[];
+}
+
+export interface NewNotionEntryReturnArgs {
+  client: any;
+  trigger_id: string;
 }
 
 async function queryPageIdByUserId(username: string) {
@@ -181,19 +188,22 @@ async function createNewPage(entry: NewNotionEntryArgs) {
   });
 }
 
-export class NewNotionEntry implements Step {
-  public async execute(args: NewNotionEntryArgs) {
-    if (args && args.username && args.name && args.aboutYourself && args.tags) {
-      try {
-        const pageId = await queryPageIdByUserId(args.username);
-        if (!!pageId) {
-          updatePage(pageId, args);
-        } else {
-          createNewPage(args);
-        }
-      } catch (error) {
-        console.log('notion error: ', error);
+export class NewNotionEntry<NextArgs> extends Step<
+  NewNotionEntryArgs,
+  NewNotionEntryReturnArgs,
+  NextArgs
+> {
+  public async onExecute(args: NewNotionEntryArgs) {
+    try {
+      const pageId = await queryPageIdByUserId(args.username);
+      if (!!pageId) {
+        updatePage(pageId, args);
+      } else {
+        createNewPage(args);
       }
+    } catch (error) {
+      console.log('notion error: ', error);
     }
+    return { client: args.client, trigger_id: args.trigger_id };
   }
 }

@@ -1,8 +1,8 @@
-import { Step, NextCallback } from '../Step';
+import { Step } from '../Step';
 import { app, CHANNEL_ID_SELF_INTRO } from '../api/slack';
 
-export class NewMemberWelcome implements Step {
-  public initialRun(next: NextCallback) {
+export class NewMemberWelcome<NextArgs> extends Step<null, null, NextArgs> {
+  public onStart() {
     app.event('member_joined_channel', async ({ event, client }) => {
       if (event.channel === CHANNEL_ID_SELF_INTRO) {
         await client.chat.postEphemeral({

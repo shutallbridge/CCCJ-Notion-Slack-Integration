@@ -1,13 +1,17 @@
-import { Step, NextCallback } from '../Step';
-import { app, CHANNEL_ID_SELF_INTRO } from '../api/slack';
+import { Step } from '../Step';
+import { app } from '../api/slack';
 
-interface SelfIntroModalArgs {
+export interface SelfIntroModalArgs {
   client: any;
   trigger_id: string;
 }
 
-export class SelfIntroModal implements Step {
-  public async execute(args: SelfIntroModalArgs) {
+export class SelfIntroModal<NextArgs> extends Step<
+  SelfIntroModalArgs,
+  void,
+  NextArgs
+> {
+  public async onExecute(args: SelfIntroModalArgs) {
     await args.client.views.open({
       trigger_id: args.trigger_id,
       view: {

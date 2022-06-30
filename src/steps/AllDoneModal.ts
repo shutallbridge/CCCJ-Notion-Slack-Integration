@@ -1,13 +1,16 @@
 import { Step } from '../Step';
 
-interface AllDoneModalArgs {
+export interface AllDoneModalArgs {
   client?: any;
   trigger_id?: string;
 }
 
-export class AllDoneModal implements Step {
-  public async execute(args: AllDoneModalArgs) {
-    console.dir(args);
+export class AllDoneModal<NextArgs> extends Step<
+  AllDoneModalArgs,
+  void,
+  NextArgs
+> {
+  public async onExecute(args: AllDoneModalArgs) {
     if (args.client && args.trigger_id) {
       await args.client.views.open({
         trigger_id: args.trigger_id,
