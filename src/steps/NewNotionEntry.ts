@@ -1,5 +1,6 @@
 import { Step } from '../Step';
 import { notion, DATABASE_ID } from '../api/notion';
+import { sleep } from '../utils/sleep';
 import { format } from 'date-fns';
 
 export interface NewNotionEntryArgs {
@@ -39,9 +40,12 @@ async function updatePage(pageId: string, entry: NewNotionEntryArgs) {
     (prev, curr) => [...prev, curr.id],
     []
   );
-  const promises = childIds.map((childId) =>
-    notion.blocks.delete({ block_id: childId })
-  );
+  const promises = childIds.map(async (childId) => {
+    notion.blocks.delete({ block_id: childId });
+    // Notion API internals require a time between requests?
+    // https://www.reddit.com/r/Notion/comments/s8uast/error_deleting_all_the_blocks_in_a_page/
+    await sleep(1000);
+  });
   await Promise.allSettled(promises);
 
   // Update page meta data
