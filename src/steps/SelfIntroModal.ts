@@ -37,7 +37,7 @@ export class SelfIntroModal<NextArgs> extends Step<
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: 'Let us know things like your background, interests, specialities, favorite pastimes, and what you hope to gain and contribute from this community. \n\n Keep in mind you can always come back and update your self intro with the `/intro` command in the #self-intro channel. If this is not your first time, your previous response will be overridden.',
+              text: 'Let us know things like your background, interests, specialities, favorite pastimes, and what you hope to gain and contribute from this community. Your response will be posted on our CCCJ Notion Page available publicly along with everyone else. \n\n Keep in mind you can always come back and update your self intro with the `/intro` command in the #self-intro channel. If this is not your first time, your previous response will be overridden.',
             },
           },
           {
