@@ -1,6 +1,6 @@
 import { App } from '@slack/bolt';
 
-export const CHANNEL_ID_SELF_INTRO = 'C03H907H2SJ';
+export const CHANNEL_ID_SELF_INTRO = process.env.CHANNEL_ID_SELF_INTRO;
 
 export const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
