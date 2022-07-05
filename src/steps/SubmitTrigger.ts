@@ -8,6 +8,7 @@ export interface SubmitTriggerReturnArgs {
   name: string;
   aboutYourself: string;
   tags: string[];
+  linkedin: string;
 }
 
 export class SubmitTrigger<NextArgs> extends Step<
@@ -35,6 +36,10 @@ export class SubmitTrigger<NextArgs> extends Step<
           (prev, curr) => prev.concat(curr.value as unknown as any),
           []
         ) as string[];
+        const linkedin =
+          view['state']['values']['input_linkedin']['plain_text_input-action'][
+            'value'
+          ] ?? '';
 
         next({
           client,
@@ -43,6 +48,7 @@ export class SubmitTrigger<NextArgs> extends Step<
           name,
           aboutYourself,
           tags,
+          linkedin,
         });
       }
     );

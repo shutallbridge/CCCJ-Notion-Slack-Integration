@@ -31,16 +31,46 @@ const stepsArr = [
   new SelfIntroModal<null>(),
   new SubmitTrigger<PostMessageAsArgs>(
     (returnArgs: SubmitTriggerReturnArgs) => {
-      const { client, trigger_id, username, name, aboutYourself, tags } =
-        returnArgs;
-      return { client, trigger_id, username, name, aboutYourself, tags };
+      const {
+        client,
+        trigger_id,
+        username,
+        name,
+        aboutYourself,
+        tags,
+        linkedin,
+      } = returnArgs;
+      return {
+        client,
+        trigger_id,
+        username,
+        name,
+        aboutYourself,
+        tags,
+        linkedin,
+      };
     }
   ),
   new PostMessageAs<NewNotionEntryArgs>(
     (returnArgs: PostMessageAsReturnArgs) => {
-      const { client, trigger_id, username, name, aboutYourself, tags } =
-        returnArgs;
-      return { client, trigger_id, username, name, aboutYourself, tags };
+      const {
+        client,
+        trigger_id,
+        username,
+        name,
+        aboutYourself,
+        tags,
+        linkedin,
+      } = returnArgs;
+      return {
+        client,
+        trigger_id,
+        username,
+        name,
+        aboutYourself,
+        tags,
+        linkedin,
+      };
     }
   ),
   new NewNotionEntry<AllDoneModalArgs>(

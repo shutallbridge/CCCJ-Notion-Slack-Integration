@@ -193,6 +193,20 @@ export class SelfIntroModal<NextArgs> extends Step<
               action_id: 'multi_select_input',
             },
           },
+          {
+            type: 'input',
+            optional: true,
+            block_id: 'input_linkedin',
+            element: {
+              type: 'plain_text_input',
+              action_id: 'plain_text_input-action',
+            },
+            label: {
+              type: 'plain_text',
+              text: 'Share your LinkedIn profile',
+              emoji: false,
+            },
+          },
         ],
       },
     });

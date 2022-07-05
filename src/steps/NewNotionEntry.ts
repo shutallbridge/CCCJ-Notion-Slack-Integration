@@ -10,6 +10,7 @@ export interface NewNotionEntryArgs {
   name: string;
   aboutYourself: string;
   tags: string[];
+  linkedin: string;
 }
 
 export interface NewNotionEntryReturnArgs {
@@ -74,6 +75,10 @@ async function updatePage(pageId: string, entry: NewNotionEntryArgs) {
           (prev, curr) => prev.concat({ name: curr }),
           []
         ),
+      },
+      LinkedIn: {
+        type: 'url',
+        url: entry.linkedin ?? '',
       },
     },
   });
@@ -157,6 +162,10 @@ async function createNewPage(entry: NewNotionEntryArgs) {
           (prev, curr) => prev.concat({ name: curr }),
           []
         ),
+      },
+      LinkedIn: {
+        type: 'url',
+        url: entry.linkedin ?? '',
       },
     },
     children: [

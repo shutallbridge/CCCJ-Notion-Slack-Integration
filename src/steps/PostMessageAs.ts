@@ -8,6 +8,7 @@ export interface PostMessageAsArgs {
   name: string;
   aboutYourself: string;
   tags: string[];
+  linkedin: string;
 }
 
 export interface PostMessageAsReturnArgs {
@@ -17,6 +18,7 @@ export interface PostMessageAsReturnArgs {
   name: string;
   aboutYourself: string;
   tags: string[];
+  linkedin: string;
 }
 
 export class PostMessageAs<NextArgs> extends Step<
@@ -50,17 +52,18 @@ export class PostMessageAs<NextArgs> extends Step<
           elements: [
             {
               type: 'plain_text',
-              text: `My Tags: ${args.tags?.join(', ')}`,
+              text: `Tags: ${args.tags?.join(', ')}`,
               emoji: true,
             },
-          ],
-        },
-        {
-          type: 'context',
-          elements: [
+            {
+              type: 'mrkdwn',
+              text: args.linkedin
+                ? `LinkedIn: <${args.linkedin}|${args.name}'s LinkedIn Profile>`
+                : 'LinkedIn: NA',
+            },
             {
               type: 'plain_text',
-              text: `My Handle: <@${args.username}>`,
+              text: `Slack Handle: <@${args.username}>`,
               emoji: true,
             },
           ],
@@ -77,6 +80,7 @@ export class PostMessageAs<NextArgs> extends Step<
       name: args.name,
       aboutYourself: args.aboutYourself,
       tags: args.tags,
+      linkedin: args.linkedin,
     };
   }
 }
