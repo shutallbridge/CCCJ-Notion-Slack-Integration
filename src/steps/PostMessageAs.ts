@@ -41,9 +41,8 @@ export class PostMessageAs<NextArgs> extends Step<
         {
           type: 'section',
           text: {
-            type: 'plain_text',
+            type: 'mrkdwn',
             text: args.aboutYourself,
-            emoji: true,
           },
         },
         {
