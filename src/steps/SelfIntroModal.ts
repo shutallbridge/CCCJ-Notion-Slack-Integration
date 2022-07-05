@@ -1,6 +1,24 @@
 import { Step } from '../Step';
 import { app } from '../api/slack';
 
+const ALL_TAGS = [
+  'Founder',
+  'Marketing',
+  'Sales',
+  'Growth',
+  'Product Manager',
+  'UX/UI',
+  'Graphic Designer',
+  'Frontend Developer',
+  'Backend Developer',
+  'Mobile Developer',
+  'Data Scientist',
+  'Machine Learning Engineer',
+  'Venture Capitalist',
+  'Angel Investor',
+  'Startup Ecosystem Supporter',
+];
+
 export interface SelfIntroModalArgs {
   client: any;
   trigger_id: string;
@@ -84,112 +102,23 @@ export class SelfIntroModal<NextArgs> extends Step<
                 text: 'Select tags',
                 emoji: true,
               },
-              options: [
+              options: ALL_TAGS.reduce<
                 {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Founder',
-                    emoji: true,
-                  },
-                  value: 'Founder',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Marketing',
-                    emoji: true,
-                  },
-                  value: 'Marketing',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Sales',
-                    emoji: true,
-                  },
-                  value: 'Sales',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Growth',
-                    emoji: true,
-                  },
-                  value: 'Growth',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Product Manager',
-                    emoji: true,
-                  },
-                  value: 'Product Manager',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'UX/UI',
-                    emoji: true,
-                  },
-                  value: 'UX/UI',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Graphic Designer',
-                    emoji: true,
-                  },
-                  value: 'Graphic Designer',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Frontend Developer',
-                    emoji: true,
-                  },
-                  value: 'Frontend Developer',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Backend Developer',
-                    emoji: true,
-                  },
-                  value: 'Backend Developer',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Mobile Developer',
-                    emoji: true,
-                  },
-                  value: 'Mobile Developer',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Data Scientist',
-                    emoji: true,
-                  },
-                  value: 'Data Scientist',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Venture Capitalist',
-                    emoji: true,
-                  },
-                  value: 'Venture Capitalist',
-                },
-                {
-                  text: {
-                    type: 'plain_text',
-                    text: 'Angel Investmentor',
-                    emoji: true,
-                  },
-                  value: 'Angel Investmentor',
-                },
-              ],
+                  text: { type: 'plain_text'; text: string; emoji: true };
+                  value: string;
+                }[]
+              >(
+                (prev, curr) =>
+                  prev.concat({
+                    text: {
+                      type: 'plain_text',
+                      text: curr,
+                      emoji: true,
+                    },
+                    value: curr,
+                  }),
+                []
+              ),
               action_id: 'multi_select_input',
             },
           },
