@@ -5,18 +5,22 @@ const ALL_TAGS = [
   'Founder',
   'Marketing',
   'Sales',
+  'Finance and Accounting',
   'Growth',
   'Product Manager',
+  'Human Resources',
   'UX/UI',
   'Graphic Designer',
   'Frontend Developer',
   'Backend Developer',
   'Mobile Developer',
-  'Data Scientist',
+  'Data Specialist',
   'Machine Learning Engineer',
+  'Mentor',
   'Venture Capitalist',
   'Angel Investor',
   'Startup Ecosystem Supporter',
+  'Student',
 ];
 
 export interface SelfIntroModalArgs {
