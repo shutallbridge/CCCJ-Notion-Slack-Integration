@@ -18,108 +18,11 @@ export interface NewNotionEntryReturnArgs {
   trigger_id: string;
 }
 
-async function queryPageIdByUserId(username: string) {
-  const response = await notion.databases.query({
-    database_id: DATABASE_ID,
-    filter: {
-      property: 'username',
-      rich_text: {
-        equals: username,
-      },
-    },
-  });
-  if (response.results.length === 0) return null;
-  return response.results[0].id;
-}
-
-async function updatePage(pageId: string, entry: NewNotionEntryArgs) {
-  // Delete existing page content
-  const result = await notion.blocks.children.list({
-    block_id: pageId,
-  });
-  const childIds = result.results.reduce<string[]>(
-    (prev, curr) => [...prev, curr.id],
-    []
-  );
-  const promises = childIds.map(async (childId) => {
-    notion.blocks.delete({ block_id: childId });
-    // Notion API internals require a time between requests?
-    // https://www.reddit.com/r/Notion/comments/s8uast/error_deleting_all_the_blocks_in_a_page/
-    await sleep(1000);
-  });
-  await Promise.allSettled(promises);
-
-  // Update page meta data
-  await notion.pages.update({
-    page_id: pageId,
-    properties: {
-      'Full Name': {
-        type: 'title',
-        title: [
-          {
-            text: {
-              content: entry.name,
-            },
-          },
-        ],
-      },
-      'Last Updated': {
-        type: 'date',
-        date: {
-          start: format(new Date(), 'yyyy-MM-dd'),
-        },
-      },
-      Tags: {
-        type: 'multi_select',
-        multi_select: entry.tags.reduce<{ name: string }[]>(
-          (prev, curr) => prev.concat({ name: curr }),
-          []
-        ),
-      },
-      LinkedIn: {
-        type: 'url',
-        url: entry.linkedin ?? '',
-      },
-    },
-  });
-
-  // Append new page content
-  await notion.blocks.children.append({
-    block_id: pageId,
-    children: [
-      {
-        object: 'block',
-        type: 'heading_1',
-        heading_1: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: `About ${entry.name}`,
-              },
-            },
-          ],
-        },
-      },
-      {
-        object: 'block',
-        type: 'paragraph',
-        paragraph: {
-          rich_text: [
-            {
-              type: 'text',
-              text: {
-                content: entry.aboutYourself,
-              },
-            },
-          ],
-        },
-      },
-    ],
-  });
-}
-
-async function createNewPage(entry: NewNotionEntryArgs) {
+async function createNewPageTemplate(
+  entry: NewNotionEntryArgs,
+  memberSinceDate: string,
+  lastUpdateDate: string
+) {
   await notion.pages.create({
     parent: { database_id: DATABASE_ID },
     properties: {
@@ -147,13 +50,13 @@ async function createNewPage(entry: NewNotionEntryArgs) {
       'Member Since': {
         type: 'date',
         date: {
-          start: format(new Date(), 'yyyy-MM-dd'),
+          start: memberSinceDate,
         },
       },
       'Last Updated': {
         type: 'date',
         date: {
-          start: format(new Date(), 'yyyy-MM-dd'),
+          start: lastUpdateDate,
         },
       },
       Tags: {
@@ -199,6 +102,49 @@ async function createNewPage(entry: NewNotionEntryArgs) {
       },
     ],
   });
+}
+
+async function queryPageIdByUserId(username: string) {
+  const response = await notion.databases.query({
+    database_id: DATABASE_ID,
+    filter: {
+      property: 'username',
+      rich_text: {
+        equals: username,
+      },
+    },
+  });
+  if (response.results.length === 0) return null;
+  return response.results[0].id;
+}
+
+async function updatePage(pageId: string, entry: NewNotionEntryArgs) {
+  const dateProperty = await notion.pages.properties.retrieve({
+    page_id: pageId,
+    property_id: 'Member Since',
+  });
+  const memberSinceDate = (dateProperty as unknown as any).date.start as string;
+  // Notion API seems to required a time between requests?
+  // https://www.reddit.com/r/Notion/comments/s8uast/error_deleting_all_the_blocks_in_a_page/
+  sleep(1000);
+  await notion.pages.update({
+    page_id: pageId,
+    archived: true,
+  });
+  sleep(1000);
+  await createNewPageTemplate(
+    entry,
+    memberSinceDate,
+    format(new Date(), 'yyyy-MM-dd')
+  );
+}
+
+async function createNewPage(entry: NewNotionEntryArgs) {
+  await createNewPageTemplate(
+    entry,
+    format(new Date(), 'yyyy-MM-dd'),
+    format(new Date(), 'yyyy-MM-dd')
+  );
 }
 
 export class NewNotionEntry<NextArgs> extends Step<
