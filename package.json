@@ -4,8 +4,8 @@
   "description": "Slackbot for internal use at Co-Creation Community Japan",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node build/index.js",
+    "start": "node build/index.js",
+    "postinstall": "tsc",
     "dev": "tsc -w & nodemon -q -w build build/index.js"
   },
   "author": "Shu Takahashi",
