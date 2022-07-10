@@ -33,7 +33,6 @@ export class NewMemberWelcome<NextArgs> extends Step<null, null, NextArgs> {
                     text: 'Get Started',
                     emoji: true,
                   },
-                  value: 'btn_get_started',
                   action_id: 'action_get_started',
                 },
               ],

@@ -26,6 +26,7 @@ const ALL_TAGS = [
 export interface SelfIntroModalArgs {
   client: any;
   trigger_id: string;
+  aboutYourself?: string;
 }
 
 export class SelfIntroModal<NextArgs> extends Step<
@@ -89,6 +90,7 @@ export class SelfIntroModal<NextArgs> extends Step<
             element: {
               type: 'plain_text_input',
               action_id: 'text_input',
+              initial_value: args.aboutYourself ?? '',
               multiline: true,
             },
           },
