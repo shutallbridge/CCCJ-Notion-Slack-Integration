@@ -66,10 +66,9 @@ async function createNewPageTemplate(
           []
         ),
       },
-      LinkedIn: {
-        type: 'url',
-        url: entry.linkedin ?? '',
-      },
+      ...(!!entry.linkedin && {
+        LinkedIn: { type: 'url', url: entry.linkedin },
+      }),
     },
     children: [
       {
