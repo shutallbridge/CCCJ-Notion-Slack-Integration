@@ -16,11 +16,9 @@ export class ReceivedReplyMessage<NextArgs> extends Step<
     // Typeguard
     if (!CHANNEL_ID_SELF_INTRO) return;
 
-    await app.client.chat.postEphemeral({
-      channel: CHANNEL_ID_SELF_INTRO,
-      thread_ts: args.threadTs,
-      user: args.threadAuthor,
-      text: `Hey <@${args.threadAuthor}>! You received a reply from <@${args.replyAuthor}> for your self-intro. Make sure to take a look!`,
+    await app.client.chat.postMessage({
+      channel: args.threadAuthor,
+      text: `You received a reply from <@${args.replyAuthor}> for your self-intro. Make sure to take a look in the <#${CHANNEL_ID_SELF_INTRO}> channel!`,
     });
   }
 }
