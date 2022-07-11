@@ -38,6 +38,15 @@ import {
   ReceivedReplyMessageArgs,
 } from './steps/ReceivedReplyMessage';
 
+import {
+  FilterIncompleteUser,
+  FilterIncompleteUserReturnArgs,
+} from './steps/FilterIncompleteUser';
+import {
+  RequestSelfIntro,
+  RequestSelfIntroArgs,
+} from './steps/RequestSelfIntro';
+
 const enforcementMessageFlow = new Flow();
 enforcementMessageFlow.addSteps([
   new MessageFilter<EnforcementMessageArgs>(
@@ -142,6 +151,17 @@ notifyReplyFlow.addSteps([
   new ReceivedReplyMessage<null>(),
 ]);
 
+const requestSelfIntroFlow = new Flow();
+requestSelfIntroFlow.addSteps([
+  new FilterIncompleteUser<RequestSelfIntroArgs>(
+    (returnArgs: FilterIncompleteUserReturnArgs) => {
+      const { channelId, userId, threadTs } = returnArgs;
+      return { channelId, userId, threadTs };
+    }
+  ),
+  new RequestSelfIntro<null>(),
+]);
+
 // Flow initializations
 enforcementMessageFlow.start();
 ephemeralMessageFlow.start();
@@ -149,3 +169,4 @@ messageTriggerFlow.start();
 commandTrigger.start();
 submitFlow.start();
 notifyReplyFlow.start();
+requestSelfIntroFlow.start();
