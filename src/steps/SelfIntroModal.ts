@@ -1,5 +1,5 @@
 import { Step } from '../Step';
-import { app } from '../api/slack';
+import { app, CHANNEL_ID_SELF_INTRO } from '../api/slack';
 
 const ALL_TAGS = [
   'Founder',
@@ -60,7 +60,7 @@ export class SelfIntroModal<NextArgs> extends Step<
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: 'Let us know things like your background, interests, specialities, favorite pastimes, and what you hope to gain and contribute from this community. Your response will be posted on our CCCJ Notion Page available publicly along with everyone else. \n\n Keep in mind you can always come back and update your self intro with the `/intro` command in the #self-intro channel. If this is not your first time, your previous response will be overridden.',
+              text: `Let us know things like your background, interests, specialities, favorite pastimes, and what you hope to gain and contribute from this community. Your response will be posted on our CCCJ Notion Page available publicly along with everyone else. \n\n Keep in mind you can always come back and update your self intro with the \`/intro\` command in the <#${CHANNEL_ID_SELF_INTRO}> channel. If this is not your first time, your previous response will be overridden.`,
             },
           },
           {
@@ -72,6 +72,10 @@ export class SelfIntroModal<NextArgs> extends Step<
             element: {
               type: 'plain_text_input',
               action_id: 'plain_text_input-action',
+              placeholder: {
+                type: 'plain_text',
+                text: 'Enter your full name',
+              },
             },
             label: {
               type: 'plain_text',
@@ -135,6 +139,11 @@ export class SelfIntroModal<NextArgs> extends Step<
             element: {
               type: 'plain_text_input',
               action_id: 'plain_text_input-action',
+              placeholder: {
+                type: 'plain_text',
+                text: 'https://www.linkedin.com/in/example',
+                emoji: false,
+              },
             },
             label: {
               type: 'plain_text',
