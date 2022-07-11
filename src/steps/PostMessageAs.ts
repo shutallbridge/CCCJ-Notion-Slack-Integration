@@ -4,6 +4,7 @@ import { CHANNEL_ID_SELF_INTRO } from '../api/slack';
 export interface PostMessageAsArgs {
   client: any;
   trigger_id: string;
+  userId: string;
   username: string;
   name: string;
   aboutYourself: string;
@@ -14,7 +15,7 @@ export interface PostMessageAsArgs {
 export interface PostMessageAsReturnArgs {
   client: any;
   trigger_id: string;
-  username: string;
+  userId: string;
   name: string;
   aboutYourself: string;
   tags: string[];
@@ -76,7 +77,7 @@ export class PostMessageAs<NextArgs> extends Step<
     return {
       client: args.client,
       trigger_id: args.trigger_id,
-      username: args.username,
+      userId: args.userId,
       name: args.name,
       aboutYourself: args.aboutYourself,
       tags: args.tags,

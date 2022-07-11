@@ -81,6 +81,7 @@ submitFlow.addSteps([
       const {
         client,
         trigger_id,
+        userId,
         username,
         name,
         aboutYourself,
@@ -90,6 +91,7 @@ submitFlow.addSteps([
       return {
         client,
         trigger_id,
+        userId,
         username,
         name,
         aboutYourself,
@@ -103,7 +105,7 @@ submitFlow.addSteps([
       const {
         client,
         trigger_id,
-        username,
+        userId,
         name,
         aboutYourself,
         tags,
@@ -112,7 +114,7 @@ submitFlow.addSteps([
       return {
         client,
         trigger_id,
-        username,
+        userId,
         name,
         aboutYourself,
         tags,

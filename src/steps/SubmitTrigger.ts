@@ -5,6 +5,7 @@ import prependHttp from 'prepend-http';
 export interface SubmitTriggerReturnArgs {
   client: any;
   trigger_id: string;
+  userId: string;
   username: string;
   name: string;
   aboutYourself: string;
@@ -48,6 +49,7 @@ export class SubmitTrigger<NextArgs> extends Step<
         next({
           client,
           trigger_id: (body as unknown as any).trigger_id,
+          userId: body.user.id,
           username: body.user.name,
           name,
           aboutYourself,

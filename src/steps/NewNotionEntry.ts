@@ -1,12 +1,13 @@
 import { Step } from '../Step';
 import { notion, DATABASE_ID } from '../api/notion';
 import { sleep } from '../utils/sleep';
+import { queryPageIdByUserId } from '../utils/notion';
 import { format } from 'date-fns';
 
 export interface NewNotionEntryArgs {
   client: any;
   trigger_id: string;
-  username: string;
+  userId: string;
   name: string;
   aboutYourself: string;
   tags: string[];
@@ -36,13 +37,13 @@ async function createNewPageTemplate(
           },
         ],
       },
-      username: {
+      userId: {
         type: 'rich_text',
         rich_text: [
           {
             type: 'text',
             text: {
-              content: entry.username,
+              content: entry.userId,
             },
           },
         ],
@@ -103,20 +104,6 @@ async function createNewPageTemplate(
   });
 }
 
-async function queryPageIdByUserId(username: string) {
-  const response = await notion.databases.query({
-    database_id: DATABASE_ID,
-    filter: {
-      property: 'username',
-      rich_text: {
-        equals: username,
-      },
-    },
-  });
-  if (response.results.length === 0) return null;
-  return response.results[0].id;
-}
-
 async function updatePage(pageId: string, entry: NewNotionEntryArgs) {
   const dateProperty = await notion.pages.properties.retrieve({
     page_id: pageId,
@@ -153,14 +140,14 @@ export class NewNotionEntry<NextArgs> extends Step<
 > {
   public async onExecute(args: NewNotionEntryArgs) {
     try {
-      const pageId = await queryPageIdByUserId(args.username);
+      const pageId = await queryPageIdByUserId(args.userId);
       if (!!pageId) {
         updatePage(pageId, args);
       } else {
         createNewPage(args);
       }
     } catch (error) {
-      console.log('notion error: ', error);
+      console.error('notion error: ', error);
     }
     return { client: args.client, trigger_id: args.trigger_id };
   }
