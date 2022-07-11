@@ -42,7 +42,8 @@ export class SubmitTrigger<NextArgs> extends Step<
             'value'
           ] ?? '';
 
-        const linkedinPrepended = prependHttp(linkedin, { https: false });
+        const linkedinPrepended =
+          linkedin.length === 0 ? '' : prependHttp(linkedin, { https: false });
 
         next({
           client,
