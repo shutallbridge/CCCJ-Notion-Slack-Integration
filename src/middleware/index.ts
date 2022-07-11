@@ -8,6 +8,11 @@ export async function skipThreadReplies({ message, next }) {
   await next();
 }
 
+export async function skipNewConversations({ message, next }) {
+  if (!message.thread_ts) return;
+  await next();
+}
+
 export async function skipEventMessages({ message, next }) {
   if (
     message.subtype === 'channel_join' ||

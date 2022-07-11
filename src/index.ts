@@ -32,6 +32,12 @@ import {
 } from './steps/NewNotionEntry';
 import { AllDoneModal, AllDoneModalArgs } from './steps/AllDoneModal';
 
+import { ThreadReply, ThreadReplyReturnArgs } from './steps/ThreadReply';
+import {
+  ReceivedReplyMessage,
+  ReceivedReplyMessageArgs,
+} from './steps/ReceivedReplyMessage';
+
 const enforcementMessageFlow = new Flow();
 enforcementMessageFlow.addSteps([
   new MessageFilter<EnforcementMessageArgs>(
@@ -123,9 +129,21 @@ submitFlow.addSteps([
   new AllDoneModal<null>(),
 ]);
 
+const notifyReplyFlow = new Flow();
+notifyReplyFlow.addSteps([
+  new ThreadReply<ReceivedReplyMessageArgs>(
+    (returnArgs: ThreadReplyReturnArgs) => {
+      const { threadTs, threadAuthor, replyAuthor } = returnArgs;
+      return { threadTs, threadAuthor, replyAuthor };
+    }
+  ),
+  new ReceivedReplyMessage<null>(),
+]);
+
 // Flow initializations
 enforcementMessageFlow.start();
 ephemeralMessageFlow.start();
 messageTriggerFlow.start();
 commandTrigger.start();
 submitFlow.start();
+notifyReplyFlow.start();
