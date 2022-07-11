@@ -4,6 +4,7 @@ import {
   CHANNEL_ID_SELF_INTRO,
   SLACK_USER_OAUTH_TOKEN,
 } from '../api/slack';
+import { skipBots, skipThreadReplies, skipEventMessages } from '../middleware';
 
 export interface MessageFilterReturnArgs {
   client: any;
@@ -11,20 +12,20 @@ export interface MessageFilterReturnArgs {
   aboutYourself: string;
 }
 
-async function onlyHumansInSelfIntroChannel({ message, next }) {
-  // Skip any message not in the self-intro channel
+async function skipNonSelfIntroChannels({ message, next }) {
   if (message.channel !== CHANNEL_ID_SELF_INTRO) return;
-
-  // Skip any message written by a bot
-  if (!!message.bot_id) return;
-
-  // Skip any channel_join messages
-  if (message.subtype === 'channel_join') return;
-
   await next();
 }
 
 const re = /^\*Announcement\*/;
+
+/**
+ * Don't delete messages that starts with *Announcement*
+ */
+async function deleteEscape({ message, next }) {
+  if (re.test(message.text ?? '')) return;
+  await next();
+}
 
 /**
  * Delete messages in the self-intro channel unless the
@@ -37,14 +38,14 @@ export class MessageFilter<NextArgs> extends Step<
 > {
   public onStart(next: (returnArgs: MessageFilterReturnArgs) => void) {
     app.message(
-      onlyHumansInSelfIntroChannel,
+      skipBots,
+      skipThreadReplies,
+      skipEventMessages,
+      skipNonSelfIntroChannels,
+      deleteEscape,
       async ({ client, message, event }) => {
         const messageText = (message as unknown as any).text as string;
 
-        // Don't delete message if it starts with *Announcement*
-        if (re.test(messageText)) return;
-
-        // Delete the message otherwise
         if (CHANNEL_ID_SELF_INTRO) {
           await client.chat.delete({
             channel: CHANNEL_ID_SELF_INTRO,
