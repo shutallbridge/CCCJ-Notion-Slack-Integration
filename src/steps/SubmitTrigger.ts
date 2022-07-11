@@ -1,5 +1,6 @@
 import { Step } from '../Step';
 import { app } from '../api/slack';
+import prependHttp from 'prepend-http';
 
 export interface SubmitTriggerReturnArgs {
   client: any;
@@ -41,6 +42,8 @@ export class SubmitTrigger<NextArgs> extends Step<
             'value'
           ] ?? '';
 
+        const linkedinPrepended = prependHttp(linkedin, { https: false });
+
         next({
           client,
           trigger_id: (body as unknown as any).trigger_id,
@@ -48,7 +51,7 @@ export class SubmitTrigger<NextArgs> extends Step<
           name,
           aboutYourself,
           tags,
-          linkedin,
+          linkedin: linkedinPrepended,
         });
       }
     );
