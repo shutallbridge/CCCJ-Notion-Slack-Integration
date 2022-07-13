@@ -39,7 +39,7 @@ export class AllDoneModal<NextArgs> extends Step<
               type: 'section',
               text: {
                 type: 'mrkdwn',
-                text: 'Thanks! Your self intro has been posted to this channel. Self introductions from other members are available for you to check out on our <https://google.com|CCCJ Notion Page>!',
+                text: 'Thanks! Your self intro has been posted to this channel. Self introductions from other members are available for you to check out on our <https://towering-psychology-946.notion.site/0e1a46d381b04bc8b5b55d3a73b2ebfa?v=aa4787fb2c8c48719f45dc19dbf8fddb|CCCJ Notion Page>!',
               },
             },
           ],
