@@ -168,5 +168,7 @@ ephemeralMessageFlow.start();
 messageTriggerFlow.start();
 commandTrigger.start();
 submitFlow.start();
-notifyReplyFlow.start();
+
+// hotfix: stop reply notification bug
+// notifyReplyFlow.start();
 requestSelfIntroFlow.start();
