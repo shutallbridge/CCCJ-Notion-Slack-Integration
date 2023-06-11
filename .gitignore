@@ -60,3 +60,6 @@ jspm_packages/
 
 # Typescript
 build
+
+# Other stuff
+.DS_Store
